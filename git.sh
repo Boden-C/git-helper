@@ -31,34 +31,32 @@ function helpMenu {
     echo "./git.sh -m 'commit message'"
     echo "     Skip branch and directly commit"
     echo "./git.sh pull"
-    echo "     Pull and not push"
+    echo "     Pull only"
     echo "./git.sh push"
-    echo "     Push and not pull"
+    echo "     Push only"
     echo "./git.sh remote"
-    echo "     View and change remote repository"
+    echo "     View and change remote origin"
     echo "==============="
 }
 
 function branchMenu {
     # Check if Git repository has any branches
-    if [ -z "$(git branch)" ]
-    then
+    if [[ -z $(git branch --list) ]]; then
 	echo "Creating 'main' as default branch..."
+	git branch
 	git branch main
     fi
 
     echo "=====BRANCHES====="
     git branch
     echo "=================="
-    if [ $(git branch --show-current) = "master" ]
-    then
+    if [ $(git branch --show-current) = "master" ]; then
 	echo "=====WARNING====="
 	echo "GitHub uses 'main' as the default branch. Type 'main' below to change."
     fi
     read -p "[PROMPT] Enter the branch you want, or press 'Enter' to stay at $(git branch --show-current): " branch_name
 
-    if [ -n "$branch_name" ]
-    then
+    if [ -n "$branch_name" ]; then
 	if git branch --list $branch_name > /dev/null
 	then
 	    git checkout $branch_name
@@ -84,6 +82,7 @@ function pull {
 	    else
 		echo "Exiting, fix the merge error"
 		echo "Once done, do './git.sh -m \"commit message\"'"
+		exit 0
 	    fi
 	fi
     fi

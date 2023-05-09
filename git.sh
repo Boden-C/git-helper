@@ -87,7 +87,8 @@ function push {
     if git diff-index --quiet --cached HEAD; then
 	read -r -n 1 -p "[PROMPT] There are no changes staged, pressing 'Enter' will push all changes. Otherwise, press any key to exit to stage specific files." input
 	if [ -z "$input" ]; then
-	    git add $(ls | grep -v "git\.sh")
+	    git add .
+	    git restore --staged git.sh
 	else
 	    echo "Exiting, do 'git add <file>' to stage a file for change"
 	    echo "Once done, do 'sync push' and press 'Enter' on the warning"

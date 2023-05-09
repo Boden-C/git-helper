@@ -12,13 +12,14 @@ Paste the one line command in terminal
 
 ### RECOMMENDED Create alias `sync` to run
 ```
-echo 'alias sync="curl -sSf https://raw.githubusercontent.com/Boden-C/git-helper/main/git.sh > ~/.git.sh && chmod +x ~/.git.sh && bash ~/.git.sh"' >> ~/.bashrc && source ~/.bashrc
+echo 'alias sync="curl -sSf https://raw.githubusercontent.com/Boden-C/git-helper/main/git.sh > git.sh && chmod +x git.sh && ./git.sh"' >> ~/.bashrc && source ~/.bashrc
 ```
+_Doing this adds an alias to your `~/.bashrc` file and creates a temporary `git.sh` file which might override your own files_
 ### Create Permanent File Called `git.sh`
 ```
 curl https://raw.githubusercontent.com/Boden-C/git-helper/main/git.sh > git.sh && chmod +x git.sh
 ```
-_If you use this, you must replace `sync` with `./git.sh`. It will not automatically update._
+_If you use this, you must replace `sync` with `./git.sh`. The file will not automatically update_
 ## Uses
 Run `sync help`
 

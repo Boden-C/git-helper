@@ -12,10 +12,10 @@ function checkRemote {
     if [ -z "$remote_url" ]; then
 	read -p "[PROMPT] Enter the Github SSH Link you want the remote repository to be at: " github_link
 	if [[ $github_link == "https://"* ]]; then
-	    echo "You entered the HTTPS Link, next time it is SSH. Converting..."
+	    echo "You entered the HTTPS Link, auto-converting..."
 	    # Replace "https://" with "git@" and ".com" with ":"
 	    github_link=${github_link/https:\/\//git@}
-	    github_link=${github_link/.com/:}
+	    github_link=${github_link/\//:}
 	fi
 	git remote add origin $github_link
 	echo "Remote origin added: $github_link"
@@ -187,10 +187,10 @@ elif [ $1 == "remote" ]; then
     echo "==========================="
     read -p "[PROMPT] Enter the Github SSH Link you want the remote repository to be at OR press 'Enter' to keep: " github_link
 	if [[ $github_link == "https://"* ]]; then
-	    echo "You entered the HTTPS Link, next time it is SSH. Converting..."
+	    echo "You entered the HTTPS Link, auto-converting..."
 	    # Replace "https://" with "git@" and ".com" with ":"
 	    github_link=${github_link/https:\/\//git@}
-	    github_link=${github_link/.com/:}
+	    github_link=${github_link/\//:}
 	elif [ -z $github_link ]; then
 	    echo "Staying at current remote repository"
 	    echo "Run 'git remote -v' to check for remote"

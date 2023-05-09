@@ -84,7 +84,6 @@ function pull {
 }
 
 function push {
-    git commit -m "$1"
     if git diff-index --quiet --cached HEAD; then
 	read -r -n 1 -p "[PROMPT] There are no changes staged, pressing 'Enter' will push all changes. Otherwise, press any key to exit to stage specific files." input
 	if [ -z "$input" ]; then
@@ -95,7 +94,7 @@ function push {
 	    end
 	fi
     fi
-
+    git commit -m "$1"
     if git ls-remote --heads origin "$current_branch" | grep -q "$current_branch"; then
 	git push -u origin "$current_branch"
     else

@@ -74,33 +74,25 @@ function pull {
     current_branch=$(git branch --show-current)
     if [ "git branch --list $current_branch > /dev/null" ]; then
 	if git pull origin $current_branch ; then
-	    echo "Successfully pulled with no merge errors"
+	    echo "Successfully pulled with no errors"
 	else
-	    echo "There was a error."
-	    read -p "[PROMPT] If it is a merge error, press 'Enter' to run 'git mergetool', or any other key to exit." input
-	    if [ -z "$input" ]; then
-		git mergetool
-		exit 0
-	    else
-		echo "Exiting, fix the merge error"
-		echo "Once done, do 'sync -m \"commit message\"'"
-		exit 0
-	    fi
+	    git mergetool
+	    echo "An error that occured during pulling caused the script to exit"
+	    end
 	fi
     fi
 }
 
 function push {
-    git add .
     git commit -m "$1"
     if git diff-index --quiet --cached HEAD; then
-	read -p "[PROMPT] There are no changes staged, pressing 'Enter' will push all changes. Otherwise, press any key to exit." input
+	read -r -n 1 -p "[PROMPT] There are no changes staged, pressing 'Enter' will push all changes. Otherwise, press any key to exit to stage specific files." input
 	if [ -z "$input" ]; then
-	    git add .
+	    git add $(ls | grep -v "git\.sh")
 	else
 	    echo "Exiting, do 'git add <file>' to stage a file for change"
 	    echo "Once done, do 'sync push' and press 'Enter' on the warning"
-	    exit 0
+	    end
 	fi
     fi
 
@@ -109,6 +101,11 @@ function push {
     else
 	git push -u origin "$current_branch":"$current_branch"
     fi
+}
+
+function end {
+    rm -rf git.sh
+    exit 0
 }
 
 #BEGIN MAIN
@@ -134,7 +131,7 @@ if [ $# -eq 0 ]; then
 	push "$message"
 	echo "Finished, try 'sync -m \"commit message\"' next time"
     fi
-    exit 0
+    end
 
     
 elif [ $1 == "-m" ]; then
@@ -153,18 +150,18 @@ elif [ $1 == "-m" ]; then
 	push "${*:2}"
 	echo "Finished"
     fi
-    exit 0	
+    end	
     
     
 elif [ $1 == "help" ]; then
     helpMenu
-    exit 0
+    end
 
 
 elif [ $1 == "pull" ]; then
     pull
     echo "Pulled only"
-    exit 0
+    end
 
     
 elif [ $1 == "push" ]; then
@@ -179,7 +176,7 @@ elif [ $1 == "push" ]; then
 	push "$message"
 	echo "Pushed only"
     fi
-    exit 0
+    end
     
 
     
@@ -196,15 +193,15 @@ elif [ $1 == "remote" ]; then
 	elif [ -z $github_link ]; then
 	    echo "Staying at current remote repository"
 	    echo "Run 'git remote -v' to check for remote"
-	    exit 0
+	    end
 	fi
 	git remote add origin $github_link
 	git remote set-url origin $github_link
 	echo "Remote origin is now: $(git remote get-url origin)"
 	echo "Run 'git remote -v' to check for remote"
-    exit 0
+    end
 
 else
     helpMenu
-    exit 0
+    end
 fi
